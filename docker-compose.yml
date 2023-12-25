@@ -1,0 +1,56 @@
+version: "3.9"
+
+services:
+  # сервис backend
+  backend:
+    build:
+      context: ./backend # директория сборки (контекст)
+      dockerfile: Dockerfile # Имя файла описания контейнера (Dockerfile)
+    ports:
+      - "4000:3000"
+    env_file:
+      - ./backend/.env
+    environment:
+      POSTGRES_HOST: database
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: on-failure
+    networks:
+      - backend_network
+
+  # сервис frontend
+  frontend:
+    build:
+      context: ./frontend # директория сборки (контекст)
+      dockerfile: Dockerfile # Имя файла описания контейнера (Dockerfile)
+    ports:
+      - "8081:80"
+    depends_on:
+      backend:
+        condition: service_started
+    restart: on-failure
+    networks:
+      - backend_network
+    
+  # сервис database
+  database:
+    image: postgres:12
+    env_file:
+      - ./backend/.env
+    volumes:
+    # монтируем директорию ./pg-data основной ОС в директорию с данными в контейнере
+      - ./pg-data:/var/lib/postgresql/data
+    restart: on-failure
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U student -d kupipodariday" ]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - backend_network
+
+networks:
+  backend_network:
+    driver: bridge
