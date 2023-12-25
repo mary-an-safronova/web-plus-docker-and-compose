@@ -3,6 +3,7 @@ version: "3.9"
 services:
   # сервис backend
   backend:
+    container_name: backend
     build:
       context: ./backend # директория сборки (контекст)
       dockerfile: Dockerfile # Имя файла описания контейнера (Dockerfile)
@@ -21,6 +22,7 @@ services:
 
   # сервис frontend
   frontend:
+    container_name: frontend
     build:
       context: ./frontend # директория сборки (контекст)
       dockerfile: Dockerfile # Имя файла описания контейнера (Dockerfile)
@@ -35,6 +37,7 @@ services:
     
   # сервис database
   database:
+    container_name: database
     image: postgres:12
     env_file:
       - ./backend/.env
