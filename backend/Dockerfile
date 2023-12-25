@@ -5,7 +5,7 @@ WORKDIR /app
 # Копируем файлы package.json и package-lock.json для установки зависимостей
 COPY package*.json ./
 # Устанавливаем зависимости
-RUN npm сi
+RUN npm i
 # Копируем исходный код и собираем приложение
 COPY . .
 RUN npm run build
@@ -19,7 +19,7 @@ WORKDIR /app
 COPY --from=builder /app/package*.json ./
 # Устанавливаем только зависимости, необходимые в продакшене
 # --omit=dev означает пропустить dev-зависимости
-RUN npm сi --omit=dev 
+RUN npm i --omit=dev 
 # Копируем директорию со сборкой приложения
 COPY --from=builder /app/dist ./dist/
 # Устанавливаем pm2 глобально
@@ -29,4 +29,5 @@ COPY ecosystem.config.js ./
 # Экспонируем порт, который будет использоваться сервисом по умолчанию
 EXPOSE 3000
 # Запускаем приложение
-CMD ["pm2-runtime", "ecosystem.config.js"]
+CMD ["pm2-runtime", "start", "ecosystem.config.js"]
+# CMD ["top"]
