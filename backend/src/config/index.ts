@@ -3,11 +3,11 @@ export default () => ({
   jwt_expiration_time: process.env.JWT_EXPIRATION_TIME,
   database: {
     type: process.env.DB_TYPE,
-    host: process.env.DB_HOST,
-    port: parseInt(process.env.DB_PORT, 10),
-    username: process.env.DB_USERNAME,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_DATABASE,
+    host: process.env.POSTGRES_HOST,
+    port: parseInt(process.env.POSTGRES_PORT, 10),
+    username: process.env.POSTGRES_USER,
+    password: process.env.POSTGRES_PASSWORD,
+    database: process.env.POSTGRES_DB,
     synchronize: process.env.NODE_ENV === 'develop', // Настройка для автосинхронизации базы данных (не рекомендуется использовать в production).
   },
 });
